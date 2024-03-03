@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +53,29 @@ public class ListaReproduccionesServiceImpl implements ListaReproduccionesServic
     }
 
 
+    public void generosSpotify() {
+        String scope = "playlist-read-private";
+        String token = "dcf92d9d16c949b198348c81f0d27d2e:a646cca18f614af994e081bebae99c3f";
+        HttpClient httpClient = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.spotify.com/v1/recommendations/available-genre-seeds"))
+                .header("Authorization", "Bearer " + token)
+                .header("Scope", scope)
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if (statusCode == 200) {
+                String responseBody = response.body();
+                String[] genresArray = responseBody.replaceAll("\"", "").replaceAll("\\s+", "").split(",");
+//                return Arrays.asList(genresArray);
+                System.out.println("Respuesta de la API: " + responseBody);
+            } else {
+                System.out.println("Error al consumir la API. Código de estado: " + statusCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 }

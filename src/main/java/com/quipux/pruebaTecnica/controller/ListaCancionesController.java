@@ -2,14 +2,14 @@ package com.quipux.pruebaTecnica.controller;
 
 import com.quipux.pruebaTecnica.entity.DTO.ListaReproduccionDTO;
 import com.quipux.pruebaTecnica.entity.ListaReproduccion;
+import com.quipux.pruebaTecnica.service.Impl.SpotifyService;
 import com.quipux.pruebaTecnica.service.ListaReproduccionesService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +19,9 @@ public class ListaCancionesController {
 
     @Autowired
     private ListaReproduccionesService listaReproduccionesService;
+
+    @Autowired
+    private SpotifyService spotifyService;
 
     @PostMapping()
     public ResponseEntity<ListaReproduccionDTO> guardarListaReproducciones(@RequestBody ListaReproduccionDTO listaReproduccionDTO){
@@ -44,5 +47,12 @@ public class ListaCancionesController {
         if(listaReproduccionesService.eliminarListaReproduccionPorNombre(nombre))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+    @GetMapping("categoias")
+    public ResponseEntity categoriasSpotify() throws IOException {
+        String token = SpotifyService.getToken();
+        return new ResponseEntity<>(spotifyService.getCategories(token),HttpStatus.OK);
     }
 }
