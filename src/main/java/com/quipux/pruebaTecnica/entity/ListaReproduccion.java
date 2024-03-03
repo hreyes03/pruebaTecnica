@@ -1,11 +1,11 @@
 package com.quipux.pruebaTecnica.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -15,6 +15,7 @@ public class ListaReproduccion {
     @Id
     private String nombre;
     private String descripcion;
-    @ManyToOne(optional = false)
-    private Canciones canciones;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "lista_id")
+    private List<Canciones> canciones;
 }

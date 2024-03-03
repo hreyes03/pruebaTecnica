@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("lists")
+@CrossOrigin("**")
 public class ListaCancionesController {
 
     @Autowired
@@ -24,11 +25,11 @@ public class ListaCancionesController {
     private SpotifyService spotifyService;
 
     @PostMapping()
-    public ResponseEntity<ListaReproduccionDTO> guardarListaReproducciones(@RequestBody ListaReproduccionDTO listaReproduccionDTO){
-        ListaReproduccionDTO listaReproduccionCreada = listaReproduccionesService.guardarListaReproducciones(listaReproduccionDTO);
-        if(listaReproduccionCreada == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(listaReproduccionCreada, HttpStatus.OK);
+        public ResponseEntity<ListaReproduccionDTO> guardarListaReproducciones(@RequestBody ListaReproduccionDTO listaReproduccionDTO){
+        if (listaReproduccionDTO.getNombre() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(listaReproduccionesService.guardarListaReproducciones(listaReproduccionDTO));
     }
 
     @GetMapping()
@@ -37,14 +38,14 @@ public class ListaCancionesController {
     }
 
     @GetMapping("/{listsName}")
-    public ResponseEntity<String> buscarListaReproduccionPorNombre(@PathVariable("listsName") String nombre){
-        Optional<ListaReproduccion> listaReproduccion = listaReproduccionesService.buscarListaReproduccionPorNombre(nombre);
+    public ResponseEntity<String> buscarListaReproduccionPorNombre(@PathVariable String listsName){
+        Optional<ListaReproduccion> listaReproduccion = listaReproduccionesService.buscarListaReproduccionPorNombre(listsName);
         return listaReproduccion.map(reproduccion -> new ResponseEntity<>(reproduccion.getDescripcion(), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{listsName}")
-    public ResponseEntity eliminarListaReproduccionPorNombre(@PathVariable("listsName") String nombre){
-        if(listaReproduccionesService.eliminarListaReproduccionPorNombre(nombre))
+    public ResponseEntity eliminarListaReproduccionPorNombre(@PathVariable String listsName){
+        if(listaReproduccionesService.eliminarListaReproduccionPorNombre(listsName))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

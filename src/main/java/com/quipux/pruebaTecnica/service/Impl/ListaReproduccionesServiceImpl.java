@@ -25,10 +25,6 @@ public class ListaReproduccionesServiceImpl implements ListaReproduccionesServic
 
     @Override
     public ListaReproduccionDTO guardarListaReproducciones(ListaReproduccionDTO listaReproduccion) {
-        Optional<ListaReproduccion> listaReproduccionExistente = listaReproduccionesRepository.findById(listaReproduccion.getNombre());
-        if (listaReproduccionExistente.isPresent() || listaReproduccion.getNombre() == null)
-            return null;
-
         return mapper.map(listaReproduccionesRepository.save(mapper.map(listaReproduccion, ListaReproduccion.class)), ListaReproduccionDTO.class);
     }
 
