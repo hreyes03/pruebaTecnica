@@ -1,21 +1,18 @@
-package com.quipux.pruebaTecnica.entity;
+package com.quipux.pruebaTecnica.entity.DTO;
 
-import jakarta.persistence.*;
+import com.quipux.pruebaTecnica.entity.Canciones;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListaReproduccion {
-    @Id
+public class ListaReproduccionDTO {
+
     private String nombre;
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "lista_id")
     private List<Canciones> canciones;
 }
